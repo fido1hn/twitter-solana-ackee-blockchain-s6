@@ -1,0 +1,267 @@
+{
+  "address": "HFGM3t5xs4TNSNUZxZznc6hXydMoEb4TVqCPdyfMBX5F",
+  "metadata": {
+    "name": "twitter_solana",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "delete_tweet",
+      "discriminator": [58, 240, 206, 92, 160, 186, 211, 87],
+      "accounts": [
+        {
+          "name": "tweet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [116, 119, 101, 101, 116]
+              },
+              {
+                "kind": "account",
+                "path": "author"
+              },
+              {
+                "kind": "arg",
+                "path": "topic"
+              },
+              {
+                "kind": "account",
+                "path": "tweet.count",
+                "account": "Tweet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "user_profile",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [117, 115, 101, 114, 45, 112, 114, 111, 102, 105, 108, 101]
+              },
+              {
+                "kind": "account",
+                "path": "author"
+              }
+            ]
+          }
+        },
+        {
+          "name": "author",
+          "signer": true,
+          "relations": ["tweet"]
+        }
+      ],
+      "args": [
+        {
+          "name": "_topic",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "send_tweet",
+      "discriminator": [179, 213, 79, 165, 123, 247, 82, 109],
+      "accounts": [
+        {
+          "name": "user_profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [117, 115, 101, 114, 45, 112, 114, 111, 102, 105, 108, 101]
+              },
+              {
+                "kind": "account",
+                "path": "author"
+              }
+            ]
+          }
+        },
+        {
+          "name": "tweet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [116, 119, 101, 101, 116]
+              },
+              {
+                "kind": "account",
+                "path": "author"
+              },
+              {
+                "kind": "arg",
+                "path": "topic"
+              },
+              {
+                "kind": "account",
+                "path": "user_profile.tweet_count",
+                "account": "UserProfile"
+              }
+            ]
+          }
+        },
+        {
+          "name": "author",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "topic",
+          "type": "string"
+        },
+        {
+          "name": "content",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "update_tweet",
+      "discriminator": [244, 144, 101, 90, 185, 30, 89, 242],
+      "accounts": [
+        {
+          "name": "tweet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [116, 119, 101, 101, 116]
+              },
+              {
+                "kind": "account",
+                "path": "author"
+              },
+              {
+                "kind": "arg",
+                "path": "topic"
+              },
+              {
+                "kind": "account",
+                "path": "tweet.count",
+                "account": "Tweet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "user_profile",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [117, 115, 101, 114, 45, 112, 114, 111, 102, 105, 108, 101]
+              },
+              {
+                "kind": "account",
+                "path": "author"
+              }
+            ]
+          }
+        },
+        {
+          "name": "author",
+          "signer": true,
+          "relations": ["tweet"]
+        }
+      ],
+      "args": [
+        {
+          "name": "topic",
+          "type": "string"
+        },
+        {
+          "name": "content",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Tweet",
+      "discriminator": [229, 13, 110, 58, 118, 6, 20, 79]
+    },
+    {
+      "name": "UserProfile",
+      "discriminator": [32, 37, 119, 205, 179, 180, 13, 194]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "TopicTooLong",
+      "msg": "The provided topic should be 50 characters long maximum."
+    },
+    {
+      "code": 6001,
+      "name": "ContentTooLong",
+      "msg": "The provided content should be 280 characters long maximum."
+    }
+  ],
+  "types": [
+    {
+      "name": "Tweet",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "author",
+            "type": "pubkey"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "topic",
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "count",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "UserProfile",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tweet_count",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}
